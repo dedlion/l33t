@@ -174,7 +174,10 @@ public:
                 {
                     expr.any=-1;
                     if (expr.any!=0 && patterns.size()>0)
-                        skipp = true;
+                    {
+                        if (patterns.back().any==-1)
+                            skipp = true;
+                    }
                 }
                 if (!skipp)
                     patterns.push_back(expr);
