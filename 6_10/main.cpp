@@ -144,8 +144,10 @@ public:
         partExpr expr = basic_expr;
         //Im so hate strings in c++. Qt will do it in couple of strings
         //doing here command stack
+
         for (auto i : p)
         {
+            bool skipp = false;
             switch (i) {
             case '.':
                 if (expr.pattern!="")   //prev character was !.
@@ -156,15 +158,26 @@ public:
                 expr.any++; //optimizing ...
                 break;
             case '*':
+                skipp=false;
                 if (expr.pattern!="")
                 {
                     expr.wild = expr.pattern.back();
                     expr.pattern.pop_back();
+                    if (expr.pattern=="" && patterns.size()>0)
+                    {
+                        if (patterns.back().wild == expr.wild)
+                        {
+                            skipp = true;
+                        }
+                    }
                 } else
                 {
                     expr.any=-1;
+                    if (expr.any!=0 && patterns.size()>0)
+                        skipp = true;
                 }
-                patterns.push_back(expr);
+                if (!skipp)
+                    patterns.push_back(expr);
                 expr = basic_expr;
                 break;
             default:    //any other character
@@ -197,7 +210,7 @@ int main()
     cout << " pal " << sol.isPalindrome(12321) << endl;
 
     //Problem #10
-    cout << "isMatch" << sol.isMatch("a",".*..a*") << endl;
+    cout << "isMatch" << sol.isMatch("abcdede","ab.*de") << endl;
 
     return 0;
 }
