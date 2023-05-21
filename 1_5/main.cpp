@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <set>
+#include <deque>
+#include <algorithm>
 
 using namespace std;
 template <class T>
@@ -33,7 +36,6 @@ void showList(ListNode* list)
 ListNode* generateList(const vector<int> & vec )
 {
     if (vec.size()==0) return new ListNode();
-    //we have gurantee that vec.size()>0
     ListNode * end = new ListNode(vec[vec.size()-1]); //last value
     ListNode * start = end ;    //in case size()==1
     for (int i=vec.size()-2;i>=0;i--) //reverse
@@ -92,7 +94,11 @@ public:
         }
     }
 
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    /* My first idea was to create vector with values and transfrom them to ListNode see ::generateList()
+     * But on leetcode you fight for speed and memory consuption so after first valid solution
+     * i changed my code for better performance now results stored in input L1
+    */
+      ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
         //we emulate сolumn summation
         int valueToStore = 0;  //number of decades from prev sum
         ListNode* startL1 = l1;
@@ -121,6 +127,26 @@ public:
         }
         return startL1;
     }
+
+
+        //https://leetcode.com/problems/longest-substring-without-repeating-characters/
+        //Problem #3  MEDIUM
+        int lengthOfLongestSubstring(string s) {
+            int result = 0;
+            std::deque<char> FIFO;
+            for(char& c : s)
+            {
+                while (find(FIFO.begin(), FIFO.end(), c) != FIFO.end()) {
+                    FIFO.pop_front();
+                }
+                FIFO.push_back(c);
+
+                result = max(result,static_cast<int>( FIFO.size() ));
+            }
+            return result;
+        }
+
+
 };
 
 int main()
@@ -137,6 +163,9 @@ int main()
     ListNode * l2 = generateList(case2_2);
     ListNode * result = sol.addTwoNumbers(l1,l2);
     showList(result);
+
+    //Problem #3
+    cout << "max len" << sol.lengthOfLongestSubstring("abcaderfb0+cbb") << endl;
 
     return 0;
 }
