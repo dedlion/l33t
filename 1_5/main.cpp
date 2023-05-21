@@ -10,10 +10,46 @@ void showVector(const vector<T> vec)
     cout<< endl;
 }
 
-//https://leetcode.com/problems/two-sum/
-//Problem #1  EASY
+//Definition for singly-linked list. from leetcode
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+void showList(ListNode* list)
+{
+    while (list != nullptr)
+    {
+        cout << list->val << "  ";
+        list = list->next;
+    }
+    cout<< endl;
+}
+
+//transfrom vector to ListNode*
+ListNode* generateList(const vector<int> & vec )
+{
+    if (vec.size()==0) return new ListNode();
+    //we have gurantee that vec.size()>0
+    ListNode * end = new ListNode(vec[vec.size()-1]); //last value
+    ListNode * start = end ;    //in case size()==1
+    for (int i=vec.size()-2;i>=0;i--) //reverse
+    {
+        start = new ListNode(vec.at(i),start);
+    }
+    return start;
+}
+
+
+
 class Solution {
 public:
+    //https://leetcode.com/problems/two-sum/
+    //Problem #1  EASY
+    //fast but not best for memory solution
     vector<int> twoSum(vector<int>& nums, int target) {
         map<int,int> possibleVariants; //{possible variant, base index}
         int vecSize = nums.size(); //hust dont want to call it every loop
@@ -39,6 +75,52 @@ public:
     }
 
 
+    //https://leetcode.com/problems/add-two-numbers/
+    //Problem #2  MEDIUM
+
+    //routine funciton. get next pointer if possible. output = value or 0
+    ListNode* getValue(ListNode* input, int * output)
+    {
+        if (input!=nullptr)
+        {
+            *output = input->val;
+            return input->next;
+        } else
+        {
+            *output =0;
+            return input;
+        }
+    }
+
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        //we emulate сolumn summation
+        int valueToStore = 0;  //number of decades from prev sum
+        ListNode* startL1 = l1;
+        ListNode* pointerToSave = l1;
+        bool nextDigitIsValid = true;
+        while(nextDigitIsValid)
+        {
+            int value1, value2;
+            l1 = getValue(l1,&value1);  //get value from pointer and shift it
+            l2 = getValue(l2,&value2);
+            int sum = value1 + value2 + valueToStore;   //sum value and decades from prev step
+
+            int valueToSave = sum%10;
+            valueToStore = (sum>9)?1:0; //decades (carry) for next loop. OR //valueToStore = (sum - valueToSave)/10;
+
+            nextDigitIsValid = l1!= nullptr || l2!= nullptr || valueToStore!=0; //check exit condition now bcs we want ot know do we need next item in List
+            if (pointerToSave->next == nullptr)
+            {
+                if (nextDigitIsValid)   //create ne new element if needed
+                {
+                    pointerToSave->next = new ListNode();
+                }
+            }
+            pointerToSave->val=valueToSave;
+            pointerToSave = pointerToSave->next;
+        }
+        return startL1;
+    }
 };
 
 int main()
@@ -47,6 +129,14 @@ int main()
     //Problem #1
     vector<int> case1_1 {2,7,11,15};
     showVector(sol.twoSum(case1_1,9));
+
+    //Problem #2
+    vector<int> case2_1 {2,4,3};
+    vector<int> case2_2 {5,6,4};
+    ListNode * l1 = generateList(case2_1);
+    ListNode * l2 = generateList(case2_2);
+    ListNode * result = sol.addTwoNumbers(l1,l2);
+    showList(result);
 
     return 0;
 }
