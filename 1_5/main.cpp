@@ -192,6 +192,24 @@ public:
             return bestSolution;
         }
 
+
+        double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+            int totalValues = nums1.size() + nums2.size();
+            if (totalValues==1)
+            {
+                if (nums1.size()==1)
+                    return nums1.at(0);
+                else
+                    return nums2.at(0);
+            }
+            bool even = (totalValues%2==0)?true:false;
+            int medianIndex = floor(totalValues/2);
+
+            //we try find
+            return 0; //SKIPPED. NOT FINISHED. May be i will return later. too late already.
+
+        }
+
 };
 
 int main()
@@ -211,6 +229,11 @@ int main()
 
     //Problem #3
     cout << "max len " << sol.lengthOfLongestSubstring("abcaderfb0+cbb") << endl;
+
+    //Problem #4
+    vector<int> case4_1 {};
+    vector<int> case4_2 {4,5};
+    cout << "median value " <<  sol.findMedianSortedArrays(case4_1,case4_2) << endl;
 
     //Problem #5
     cout << "max str " << sol.longestPalindrome("bb") << endl;
