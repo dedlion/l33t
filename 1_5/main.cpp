@@ -22,6 +22,7 @@ struct ListNode {
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
+//my own func for dbg
 void showList(ListNode* list)
 {
     while (list != nullptr)
@@ -32,7 +33,7 @@ void showList(ListNode* list)
     cout<< endl;
 }
 
-//transfrom vector to ListNode*
+//transfrom vector to ListNode*. Dbg only
 ListNode* generateList(const vector<int> & vec )
 {
     if (vec.size()==0) return new ListNode();
@@ -136,16 +137,60 @@ public:
             std::deque<char> FIFO;
             for(char& c : s)
             {
-                while (find(FIFO.begin(), FIFO.end(), c) != FIFO.end()) {
-                    FIFO.pop_front();
+                //AFTER solution submit:
+                //people's solutions use map<c,freq> for frequency distribution. Faster soulution.
+                while (find(FIFO.begin(), FIFO.end(), c) != FIFO.end()) {   //is there any same char
+                    FIFO.pop_front();   //start deleting char from another side of deque (FIFO)
                 }
-                FIFO.push_back(c);
+                FIFO.push_back(c);  //we are here only if there is no char in deque
 
-                result = max(result,static_cast<int>( FIFO.size() ));
+                result = max(result,static_cast<int>( FIFO.size() ));   //save max solution
             }
             return result;
         }
 
+        //https://leetcode.com/problems/longest-palindromic-substring/
+        //Problem #5  MEDIUM
+
+        //routine function. to check how long is finded polindrome.
+        //check string by expanping borders (left border of the substring anf right border of the string)
+        string mirroring(string &s, int left, int right)
+        {
+            const int strLen = s.size();    //string length
+            while (left>=0 && right<strLen)
+            {
+                if (s[left]==s[right])
+                {
+                    left--;
+                    right++;
+                } else
+                {
+                    break;
+                }
+            }
+            //cancel last change. Can be moved to while, but less readable
+            left++;
+            right--;
+            return s.substr(left,right-left+1);
+        }
+
+        string longestPalindrome(string s) {
+            string bestSolution = string(1,s.at(0));  //guranteed s.length>0. Didnt know that word with 1 letter also is a palindrome word
+            const int strLen = s.size();
+            //cant use else. bcs "fasddddsaf" i+1 better then i+2
+            for (int l=0;l<2; l++)  //change a?a and aa
+            {
+                for(int i=0; i<strLen-1-l; i++)
+                {
+                    if (s[i]==s[i+1+l]) //find center Palindromic string of aa OR a?a if l==1
+                    {
+                        string palindrom = mirroring(s,i,i+1+l);    //check len. atleast we have found string with 2 letters
+                        if (palindrom.size()>bestSolution.size()) bestSolution=palindrom;   //save best word
+                    }
+                }
+            }
+            return bestSolution;
+        }
 
 };
 
@@ -165,8 +210,10 @@ int main()
     showList(result);
 
     //Problem #3
-    cout << "max len" << sol.lengthOfLongestSubstring("abcaderfb0+cbb") << endl;
+    cout << "max len " << sol.lengthOfLongestSubstring("abcaderfb0+cbb") << endl;
 
+    //Problem #5
+    cout << "max str " << sol.longestPalindrome("bb") << endl;
     return 0;
 }
 
