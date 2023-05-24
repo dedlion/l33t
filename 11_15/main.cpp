@@ -61,20 +61,20 @@ public:
                 positive[i]++;
                 if (i==0)
                 {
-                    zeroes++;
-                    negative[i]++;
+                    zeroes++;       //we want to know how many zeroes in vector
+                    negative[i]++;  //zeroes are very special. 0==-0 so add them in negative too
                 }
             }
             else
                 negative[i]++;
-            }
+        }
 
-           if (zeroes==2) positive[0]--; //{0,0,X} != 0
+           if (zeroes==2) positive[0]--; //{0,0,X} != 0 VERY SPECIAL CASE
 
 
-           for (auto i = positive.begin(); i!=positive.end(); i++)
+           for (auto i = positive.begin(); i!=positive.end(); i++)  //first value is positive
            {
-               for (auto l = negative.begin(); l!=negative.end(); l++)
+               for (auto l = negative.begin(); l!=negative.end(); l++)  //second is ngative. Third who knows?
                {
                    int value = -(i->first + l->first); //we need to find this number A+B+C=0 -> A+B=-C
                    if (value>=0)
@@ -89,9 +89,9 @@ public:
                            }
                        } else
                        {
-                           if (value < i->first ) continue;
+                           if (value < i->first ) continue; //map contains sorted value. So it is out guard from same results, work only forward
                            auto search = positive.find(value);
-                           if (search != positive.end())
+                           if (search != positive.end())    //A+B=-C Find C
                            {
                                //viable {+i, -l, +search}
                                result.emplace_back(std::initializer_list<int>{i->first,l->first,search->first});
@@ -109,9 +109,9 @@ public:
                            }
                        } else
                        {
-                           if (value < l->first ) continue;
+                           if (value < l->first ) continue; //map contains sorted value. So it is out guard from same results, work only forward
                            auto search = negative.find(value);
-                           if (search != negative.end())
+                           if (search != negative.end())    //A+B=-C Find C
                            {
                                //viable {+i, -l, -search}
                                result.emplace_back(std::initializer_list<int>{i->first,l->first,search->first});
