@@ -34,12 +34,68 @@ public:
 
         return head;
     }
+
+
+    //https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+    //17 MEDIUM
+    const vector<vector<char>> PHONE_LETTERS = {{/*0*/},{/*1*/},{'a','b','c'},{'d','e','f'},{'g','h','i'},{'j','k','l'},{'m','n','o'},{'p','q','r','s'},{'t','u','v'},{'w','x','y','z'},{/*9*/}};
+
+    void recursion(int num, vector<int> & indexNums ,vector<string> &result, const vector<vector<char>> & letters)
+    {
+        int startValue = indexNums.at(num);  //we save starting position of index == max possible index
+        for (int i=startValue; i>=0; i--)   //iterate all possible variants of THIS index
+        {
+            indexNums[num]=i;    //change index for recursion call
+            if (num==0)
+            {
+                //end of recursion. Add word based on indexes num
+                string word;
+                int wordSize = letters.size();
+                word.resize(wordSize);
+                for (int l=0; l<wordSize;l++)
+                {
+                    word[l]=letters[l][indexNums[l]];   //fill string with letters
+                }
+                result.push_back(word); //add result
+            } else
+            {
+                recursion(num-1,indexNums,result, letters); //iterate through all posible letters positioned roght to target (num)
+            }
+        }
+        indexNums.at(num)=startValue;
+    }
+
+    vector<string> letterCombinations(string digits) {
+        vector<int> indexNums;
+        vector<vector<char>> letters;
+        int resultLen=1;
+        for (auto i : digits)
+        {
+            int num = static_cast<int>(i)-48; //can be done with map<> OR stoi
+            if (num>=0 && num<10)             //character is valid
+            {
+                letters.push_back(PHONE_LETTERS.at(num));   //this will be const array of possible letters for eash position
+                resultLen = resultLen * PHONE_LETTERS.at(num).size();   //this is how many possible variantss  we can have
+                indexNums.push_back(PHONE_LETTERS.at(num).size()-1);     //this indexes for letters in this word
+            }
+        }
+        vector<string> result;
+        if (indexNums.size()==0) return result;
+        result.reserve(resultLen);
+        recursion(indexNums.size()-1,indexNums,result,letters);
+        return result;
+    }
+
 };
 
 int main()
 {
     Solution sol;
+    //17#
+    cout << "phone numbers : ";
+    routine::showVector(sol.letterCombinations("223"));
 
+    //#19
     ListNode * head = routine::generateList(std::initializer_list<int>{1,2});
     ListNode * newList = sol.removeNthFromEnd(head,1);
     cout << "new list ";
