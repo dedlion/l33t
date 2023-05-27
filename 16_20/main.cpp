@@ -92,7 +92,7 @@ int main()
 {
     Solution sol;
     //17#
-    cout << "phone numbers : ";
+    cout << "phone letters : ";
     routine::showVector(sol.letterCombinations("223"));
 
     //#19
