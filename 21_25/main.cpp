@@ -1,11 +1,85 @@
 #include <iostream>
 #include "routine.h"
 #include "queue"
+#include <bitset>
+
 using namespace std;
 
 
 class Solution {
 public:
+    //https://leetcode.com/problems/merge-two-sorted-lists
+    //Ptroblem 21 EASY
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode * head;
+
+        if (list1==nullptr) return list2;   //second list is sorted no need to do anything
+        if (list2==nullptr) return list1;   //second list is sorted no need to do anything
+
+        if (list1->val < list2->val)    //find start of new linked list
+        {
+            head = list1;
+            list1 = list1->next;        //"rotate" used list
+        } else
+        {
+            head = list2;
+            list2 = list2->next;        //"rotate" used list
+        }
+        ListNode * copyHead = head;
+
+        while (list1!=nullptr && list2!=nullptr) {  //link while both lists are valid
+            if (list1->val < list2->val)
+            {
+                head->next = list1; //link
+                list1 = list1->next;//"rotate"
+            } else
+            {
+                head->next = list2; //link
+                list2 = list2->next;//"rotate"
+            }
+            head=head->next;
+        }
+
+        //when one list is empty. we just lnk another list (it is already sorted)
+        if (list1==nullptr)
+            head->next=list2;
+        else
+            head->next=list1;
+
+        return copyHead;
+    }
+
+    //https://leetcode.com/problems/generate-parentheses/
+    //#22 MEDIUM
+    void bracketRecursion(string input, vector<string> & res, int canAddBrackets, int openBrackets)
+    {
+        if (openBrackets>0)
+        {
+            //can close bracket
+            bracketRecursion(input+")", res, canAddBrackets, openBrackets-1);  //1 closed bracket
+        }
+        if (canAddBrackets>0)
+        {
+            //can open new bracket
+            bracketRecursion(input+"(", res, canAddBrackets-1, openBrackets+1); //1 new open bracket
+        }
+        if (canAddBrackets==0 && openBrackets==0)
+        {
+            //no more freedom. add to result
+            res.push_back(input);
+        }
+    }
+
+    vector<string> generateParenthesis(int n) {
+        vector<string> result;
+        if (n==0) return result;    //empty variant
+        string word{"("};                //empty word. Always start with "("
+        //word.reserve(n*2);          //word have n*2 chars... Tests have showed this is bad idead, bcs of a lot of copy
+        //signature (currentWord, result vector
+        bracketRecursion(word, result, n-1,1);  //start recursion. canAddBrackets=n-1 (already used 1)
+        return result;
+    }
+
 //https://leetcode.com/problems/merge-k-sorted-lists/
 //23# HARD
 ListNode* mergeKLists(vector<ListNode*>& lists) {
@@ -70,6 +144,9 @@ int main()
     ListNode * third = routine::generateList(d3);
     vector <ListNode *> input {first, second, third};
 
+    //22
+    cout << "brakcets generate" ;
+    routine::showVector( sol.generateParenthesis(3));
     //23
     routine::showList( sol.mergeKLists(input));
 
