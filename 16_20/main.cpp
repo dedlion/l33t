@@ -1,5 +1,7 @@
 #include <iostream>
 #include "routine.h" //some common headers and functions ./../
+#include "queue"
+#include "stack"
 
 using namespace std;
 
@@ -39,7 +41,7 @@ public:
     //https://leetcode.com/problems/letter-combinations-of-a-phone-number/
     //17 MEDIUM
     const vector<vector<char>> PHONE_LETTERS = {{/*0*/},{/*1*/},{'a','b','c'},{'d','e','f'},{'g','h','i'},{'j','k','l'},{'m','n','o'},{'p','q','r','s'},{'t','u','v'},{'w','x','y','z'},{/*9*/}};
-
+    //internal funct for problem #17
     void recursion(int num, vector<int> & indexNums ,vector<string> &result, const vector<vector<char>> & letters)
     {
         int startValue = indexNums.at(num);  //we save starting position of index == max possible index
@@ -64,7 +66,7 @@ public:
         }
         indexNums.at(num)=startValue;
     }
-
+    //problem #17 Main func
     vector<string> letterCombinations(string digits) {
         vector<int> indexNums;
         vector<vector<char>> letters;
@@ -85,6 +87,27 @@ public:
         recursion(indexNums.size()-1,indexNums,result,letters);
         return result;
     }
+    //https://leetcode.com/problems/valid-parentheses/
+    //problem #20 EASY
+    bool isValid(string s) {
+        stack<char> st; //idea is simple. closing bracket must match last open bracket
+        for (auto i : s)
+        {
+            if (i=='[' || i=='(' || i=='{')
+            {
+                st.push(i); //save open bracket
+            } else
+            {
+                //check closing bracket
+                if (st.size()==0) return false;
+                if (i==']') if (st.top()=='[') st.pop(); else return false;
+                if (i=='}') if (st.top()=='{') st.pop(); else return false;
+                if (i==')') if (st.top()=='(') st.pop(); else return false;
+            }
+        }
+        if (st.size()!=0) return false;
+        return true;
+    }
 
 };
 
@@ -101,6 +124,9 @@ int main()
     cout << "new list ";
     routine::showList(newList);
     cout << endl;
+
+    //#20
+    cout << "valid bracker " << sol.isValid("{}[](())") << endl;
 
     return 0;
 }
