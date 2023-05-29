@@ -43,7 +43,6 @@ public:
     //https://leetcode.com/problems/divide-two-integers/
     //#29 MEDIUM
     const int MAX_POSS_DIVIS = 1<<30;    //1<<30-1 max number which can be *2 without overflow
-    const int MAX_POSS_INT = 1<<30;
     int divide(int dividend, int divisor) {
         if (dividend==0) return 0;  //empty solution
         int copyDivisor = divisor;
@@ -112,6 +111,8 @@ int main()
 {
     //26 and 27 are very simple
 
+
+    //29
     Solution sol;
     int dividend = -2147483648;
     int divisor = -3;
