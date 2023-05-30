@@ -127,8 +127,40 @@ ListNode* mergeKLists(vector<ListNode*>& lists) {
         //find new value
     }
 
+
     return returnHead;
 }
+    //https://leetcode.com/problems/swap-nodes-in-pairs/
+    //24# MEDIUM
+    ListNode* swapPairs(ListNode* head) {
+
+
+
+        if (head==nullptr || head->next==nullptr) return head;
+
+        ListNode* returnHead = head->next;  //start with second node
+        head->next = returnHead->next;  //1->3
+        returnHead->next=head;  //2->1
+        //                                  ______
+        //                                 |      |
+        //links was->V->W->next   =>  was  V<-W  next
+        //                              |_____|
+        while (head!=nullptr)
+        {
+            if (head->next==nullptr) break;
+            ListNode* V = head->next;
+
+            if (V->next==nullptr) break;
+            ListNode* W = V->next;
+
+            head->next = W; //was->W
+            V->next=W->next;//V->next
+            W->next = V;    //W->V
+            head = V;       //move to V
+
+        }
+        return returnHead;
+    }
 
 };
 
@@ -150,6 +182,10 @@ int main()
     //23
     routine::showList( sol.mergeKLists(input));
 
+    //24
+    vector <int> v1 {1,2,3,4};
+    ListNode * linkList = routine::generateList(v1);
+    routine::showList( sol.swapPairs(linkList));
 
 
     return 0;
