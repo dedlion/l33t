@@ -1,5 +1,6 @@
 #include <iostream>
 #include "routine.h"
+#include "unordered_map"
 
 using namespace std;
 
@@ -104,6 +105,75 @@ public:
 
         return (sign>0)?result:-result;
     }
+
+    //https://leetcode.com/problems/substring-with-concatenation-of-all-words/
+    //30# HARD
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> res;
+        int totalWords = words.size();
+        if (totalWords == 0 ) return res;
+
+        int oneWordLen = words.at(0).size();
+        int allWordsLen = totalWords * oneWordLen;
+
+        int len = s.size();
+        if (len<allWordsLen) return res;
+
+        //we use map bcs words can contain duplicates. So we save "word" + "weight"
+        //it contains all subparts of concatenation word
+        map<string,int> wordMap;
+        for (auto i:words)
+            wordMap[i]++;
+
+        //bcs i want some optimizing. im doing this algo oneWordLen-1 time.
+        //so we skip some letters and assume that all words can be only in oneWordLen*N indexes
+        for (int i=0; i<oneWordLen;i++)
+        {
+            int position = i;
+            map<string,int> currMap;    //we store curr freq map (aka all subparts of concatenation word)
+            int fifoLen = 0;
+            while (position<len-oneWordLen+1)
+            {
+                string sub = s.substr(position,oneWordLen); //get substr
+                auto find = wordMap.find(sub);
+                if (find!=wordMap.end())        //if this can be patr of our Concatenation
+                {
+                    //here we doing some kinf of FIFO
+                    //we should use this bcs of variant: string = "bbbbbb" words = {"b","b"};
+                    //with FIFO we can it much faster
+                    if (fifoLen==totalWords)
+                    {
+                        //add to currMap when len is == totalWords and remove prev word
+                        currMap[sub]++;
+                        string outStr = s.substr(position-fifoLen*oneWordLen,oneWordLen);
+                        currMap[outStr]--;  //we can offord this. bcs keys are only == words in "words". So no add keys is generated
+                    } else
+                    {
+                        //add to currMap while len is < totalWords
+                        fifoLen++;  //fifoLen!=currMap.size() when same words occures
+                        currMap[sub]++;
+                    }
+                    if (fifoLen==totalWords)    //not nessesary. just save a little bit CPU time
+                    {
+                        if (currMap==wordMap)   //compare two maps... this is main idead of algo. Check that curr word contains from the same subparts
+                        {
+                            //we save result
+                            res.push_back(position-allWordsLen+oneWordLen);
+                        }
+                    }
+                } else
+                {
+                    //we have no such word -> should clear all prev words
+                    currMap.clear();
+                    fifoLen=0;
+                }
+                position+=oneWordLen;
+            }
+
+        }
+
+        return res;
+    }
 };
 
 
@@ -118,6 +188,13 @@ int main()
     int divisor = -3;
 
     cout<< "divide " <<sol.divide(dividend,divisor) << " vs " << dividend/divisor << endl;
+
+    //30
+    //vector<int> findSubstring(string s, vector<string>& words) {
+
+    cout << "words  " ;
+    vector<string> s{"ab","ba"};
+    routine::showVector(sol.findSubstring("kabaab",s));
 
     return 0;
 }
