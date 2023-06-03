@@ -6,6 +6,52 @@ using namespace std;
 
 class Solution {
 public:
+
+    //https://leetcode.com/problems/next-permutation/
+    //#31 MEDIUM
+    //we sort digits with swap bcs they are reverse sorted
+    void reverseSort(vector<int>& nums, int leftBorder) //routine function
+    {
+        int rightBorder = nums.size()-1;
+        while (rightBorder>leftBorder)
+        {
+            swap(nums[rightBorder],nums[leftBorder]);
+            rightBorder--;
+            leftBorder++;
+        }
+
+    }
+
+    void nextPermutation(vector<int>& nums) {
+        int len = nums.size();
+        if (len<2) return;
+        //find digit which bigger the next. 1 2 >3< change to 1 >3< 2
+
+        //62873651  ->  62875631
+        //123       ->  132
+        for (int i=len-2; i>=0; i--)
+        {
+            if (nums[i]<nums[i+1])
+            {
+                //i-1 -> must be changed
+                for (int l=len-1; l>i; l--)
+                {
+                    if (nums[l]>nums[i])
+                    {
+                        swap(nums[i],nums[l]);
+                        reverseSort(nums,i+1);  //just sort digits [i+1:nums.size()-1]
+                        return;
+                    }
+                }
+
+            }
+        }
+        //this is max poss value. just sort ALL digits
+        reverseSort(nums,0);
+
+        return;
+    }
+
     //https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
     //34 MEDIUM
     vector<int> searchRange(vector<int>& nums, int target) {
@@ -71,7 +117,7 @@ public:
 
         while (maxIndex>=minIndex)  //while we have not found target)
         {
-            currIndex = round((maxIndex + minIndex)/2.0f);  //new middle index
+            currIndex = round((maxIndex + minIndex)/2.0f);  //new middle index. Can use ceil - doesnt matter
 
             if (nums[currIndex]==target) return currIndex;
             //bcs of non-decreasing order we can change border (left or right) to this index
@@ -92,6 +138,15 @@ public:
 int main()
 {
     Solution sol;
+    //31
+    vector<int> data_31{6,2,8,7,3,6,5,1};
+    //vector<int> data_31{1,3,2};
+    cout << "pr#31 input   ";
+    routine::showVector(data_31);
+    sol.nextPermutation(data_31);
+    cout << "output  ";
+    routine::showVector(data_31);
+
     //34
     vector<int> data_34{2,2};
     routine::showVector(sol.searchRange(data_34,2));
