@@ -52,6 +52,64 @@ public:
         return;
     }
 
+    pair<int,int> checkSubString(string & s, bool reverse, int len)
+    {
+        const char openBracket = (!reverse)?'(':')';
+
+        int resultValue = 0;
+        int openBracketsCounter =0;
+        int fullBrackets =0;
+        int lastCharIndex=s.size()-1;
+        int i=0;
+        while (i<len)
+        {
+            const char & c = (reverse)?s.at(lastCharIndex-i):s.at(i);
+            if (c==openBracket)
+            {
+                openBracketsCounter++;
+            } else
+            {
+                if (openBracketsCounter>0)
+                {
+                    fullBrackets++;
+                    openBracketsCounter--;
+                } else
+                {
+                    resultValue=max(resultValue,fullBrackets*2);
+                    fullBrackets=0;
+                }
+            }
+            i++;
+        }
+        if (openBracketsCounter==0) //no spare letters
+        {
+            //substring is valid. no need to recheck
+            resultValue=max(resultValue,fullBrackets*2);
+            return {resultValue,0};
+        }
+        else
+        {
+            if (fullBrackets*2<resultValue)
+                return {resultValue,0}; //who cares? in this substring in BEST variant still have not enoigh brackets
+            else
+                return {resultValue,openBracketsCounter+fullBrackets*2};    //may we need to recheck this substr
+        }
+
+    }
+
+    int longestValidParentheses(string s) {
+
+        pair <int,int> result = checkSubString(s,false,s.size());
+        if (result.second==0) return result.first;
+
+        //reverse search for last lastSubstrLen characters/
+        //bcs exists string like ()(() . Right answer is 0
+        //can be written subfunc.... with A LOT OF if: change character, change while direction, change starting point
+        pair <int,int> reverseResult = checkSubString(s,true,result.second);
+
+        return max(result.first,reverseResult.first);
+    }
+
     //https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
     //34 MEDIUM
     vector<int> searchRange(vector<int>& nums, int target) {
@@ -146,6 +204,9 @@ int main()
     sol.nextPermutation(data_31);
     cout << "output  ";
     routine::showVector(data_31);
+
+    //32
+    cout << "brackets " << sol.longestValidParentheses("()()(())))((()(()()()(())()()()((()((((") << endl;
 
     //34
     vector<int> data_34{2,2};
