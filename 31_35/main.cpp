@@ -55,33 +55,37 @@ public:
     pair<int,int> checkSubString(string & s, bool reverse, int len)
     {
         const char openBracket = (!reverse)?'(':')';
-
+        //IDEA to find max number of full bracker "()"
+        //"(()" -  1 full bracket
         int resultValue = 0;
         int openBracketsCounter =0;
         int fullBrackets =0;
-        int lastCharIndex=s.size()-1;
+        int lastCharIndex=s.size()-1;   //only needed in reverse
         int i=0;
         while (i<len)
         {
             const char & c = (reverse)?s.at(lastCharIndex-i):s.at(i);
-            if (c==openBracket)
+            if (c==openBracket) //bracket can be open always
             {
                 openBracketsCounter++;
             } else
             {
-                if (openBracketsCounter>0)
+                if (openBracketsCounter>0) //closing bracket is only valid if there is open brackets somewhere
                 {
                     fullBrackets++;
                     openBracketsCounter--;
                 } else
                 {
+                    //no open bracket for this bracket. Save temp results
                     resultValue=max(resultValue,fullBrackets*2);
                     fullBrackets=0;
                 }
             }
             i++;
         }
-        if (openBracketsCounter==0) //no spare letters
+        //we have processed full str and nedd to think about last substr
+        //return {len of best substr,len of LAST substr if we not sure about it}
+        if (openBracketsCounter==0) //no spare letters. VALID substr
         {
             //substring is valid. no need to recheck
             resultValue=max(resultValue,fullBrackets*2);
@@ -90,7 +94,7 @@ public:
         else
         {
             if (fullBrackets*2<resultValue)
-                return {resultValue,0}; //who cares? in this substring in BEST variant still have not enoigh brackets
+                return {resultValue,0}; //who cares? in this substring in BEST variant still have not enough brackets to change result
             else
                 return {resultValue,openBracketsCounter+fullBrackets*2};    //may we need to recheck this substr
         }
