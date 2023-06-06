@@ -47,6 +47,38 @@ public:
         return true;
     }
 
+    //https://leetcode.com/problems/combination-sum/
+    //39# MEDIUM
+    void recursionSum(vector<int>& candidates, int index, int target, vector<vector<int>> & result, vector<int> & tmpSolution)
+    {
+        for (int i=index; i<candidates.size();i++)
+        {
+            if (target-candidates[i]==0)
+            {
+                //valid solution
+                tmpSolution.push_back(candidates[i]);   //add value
+                result.push_back(tmpSolution);          //save to result
+                tmpSolution.pop_back();                 //pop so we can use this vector without deep copy
+            } else
+            {
+                if (target-candidates[i]>0)
+                {
+                    tmpSolution.push_back(candidates[i]);   //add value
+                    recursionSum(candidates,i,target-candidates[i],result,tmpSolution); //can further checked
+                    tmpSolution.pop_back();                     //pop so we can use this vector without deep copy
+                }
+            }
+        }
+    }
+
+
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> result;
+        vector<int> tmpSolution;
+        recursionSum(candidates,0,target,result,tmpSolution); //start recursion with 0 starting conditions
+        return result;
+    }
+
 
 };
 
