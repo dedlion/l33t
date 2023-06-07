@@ -63,8 +63,8 @@ public:
             {
                 if (target-candidates[i]>0)
                 {
-                    tmpSolution.push_back(candidates[i]);   //add value
-                    recursionSum(candidates,i,target-candidates[i],result,tmpSolution); //can further checked
+                    tmpSolution.push_back(candidates[i]);   //add value to possible result vector
+                    recursionSum(candidates,i,target-candidates[i],result,tmpSolution); //can further checked -> recursion
                     tmpSolution.pop_back();                     //pop so we can use this vector without deep copy
                 }
             }
