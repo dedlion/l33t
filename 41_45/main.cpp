@@ -6,6 +6,9 @@ using namespace std;
 
 class Solution {
 public:
+
+    //https://leetcode.com/problems/first-missing-positive/
+    //#41 HARD
 int firstMissingPositive(vector<int>& nums) {
     //another straightforward solution
     const int MAX_MISSED_VAL  =  10e5+1; //in worst case scenario we need this amount of memory
