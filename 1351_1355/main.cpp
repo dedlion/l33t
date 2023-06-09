@@ -16,7 +16,7 @@ public:
         //find bottom keft positive value
         while (x>=0)
         {
-            if (grid[y][x]>0)
+            if (grid[y][x]>=0)
             {
                 break;
             } else
