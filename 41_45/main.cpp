@@ -24,7 +24,8 @@ int firstMissingPositive(vector<int>& nums) {
     return distance( begin(map), find_if( begin(map), end(map), [](int x) { return x == false; })); //first zero is missed int
 }
 
-
+//https://leetcode.com/problems/jump-game-ii
+//#45 MEDIUM
 int jump(vector<int>& nums) {
     int len = nums.size();  //total vector size
     if (len == 1) return 0; //unique solution
@@ -56,6 +57,7 @@ int jump(vector<int>& nums) {
     return leapsNum+1;
 }
 };
+
 
 int main()
 {
