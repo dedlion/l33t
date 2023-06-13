@@ -1,12 +1,16 @@
 #include <iostream>
 #include "routine.h"
 #include "memory"
+#include <algorithm>
+#include <queue>
 
 using namespace std;
 
 
 class Solution {
 public:
+    //https://leetcode.com/problems/count-negative-numbers-in-a-sorted-matrix/
+    //#1351 EASY
     int countNegatives(vector<vector<int>>& grid) {
         int height = grid.size();
         int width = grid.at(0).size();  //grid[x][y]
@@ -48,6 +52,57 @@ public:
         }
         return res;
     }
+
+    //https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/
+    //#1353  MEDIUM
+    int maxEvents(vector<vector<int>>& events) {
+        int len = events.size();
+        if (len==0) return 0;
+        //sort to simplify code below by starting day
+        sort(events.begin(), events.end(), [](vector<int> & a, vector<int> & b){ return b.at(0)>a.at(0); });
+
+        int eventsDone =0;
+        int currDay = events.at(0).at(0);
+        priority_queue<int, vector<int>, std::greater<int> > Q;
+        int i=0;
+        while (i<len || Q.size()>0) //while have new events OR have events in Q
+        {
+            if (Q.size()>0) //Q not empty
+            {
+                Q.pop();        //get event with best priority (priority = endDay - currDay). Less is more priority
+                eventsDone++;   //event is done
+                currDay++;      //currDay
+
+                //Delete all events which cannot be done
+                while (Q.size()>0)
+                {
+                    if (Q.top()-currDay<0)
+                        Q.pop();
+                    else
+                        break;
+                }
+                //add new events from new currDay
+                while (i<len && events.at(i).at(0)==currDay)
+                {
+                    Q.push(events.at(i).at(1));
+                    i++;
+                }
+            } else
+            {
+                //No events in Q. lets jump to closest event and add all events with this startDay
+                if (i<len)
+                {
+                    currDay= events.at(i).at(0);
+                    while (i<len && events.at(i).at(0)==currDay)
+                    {
+                        Q.push(events.at(i).at(1));
+                        i++;
+                    }
+                }
+            }
+        }
+        return eventsDone;
+    }
 };
 
 //https://leetcode.com/problems/product-of-the-last-k-numbers/
@@ -55,7 +110,6 @@ public:
 class ProductOfNumbers {
 public:
     vector <int> memory;
-    const bool V2 = true;
     //we will save not numbers but possible results
     ProductOfNumbers() {
 
@@ -101,6 +155,10 @@ int main()
     pr.add(3);
     pr.add(0);
     cout << "product value " <<pr.getProduct(3) << endl;
+
+    vector<vector<int>> data_1353 = {{1,4},{4,4},{2,2},{3,4},{1,1}};
+    vector<vector<int>> data_1353_2 = {{1,2},{2,3},{3,4},{1,2}};
+    cout << "max events" << sol.maxEvents(data_1353_2) << endl;
     return 0;
 }
 
