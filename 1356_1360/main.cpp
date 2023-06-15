@@ -1,10 +1,42 @@
 #include <iostream>
-
+#include "routine.h"
 using namespace std;
 
 
 class Solution {
 public:
+
+    //https://leetcode.com/problems/sort-integers-by-the-number-of-1-bits
+    //#1356 EASY
+
+    //find number of ones
+    short numOfOnes(int a)
+    {
+        short res=0;
+        while (a>0) {
+            res += a & 0x01;    //take least sign. bit
+            a = a >> 1;         //shift it left == /2
+        }
+        return res;             //return number of bits
+    }
+
+    vector<int> sortByBits(vector<int>& arr) {
+        //in first iteration i used map, to store nubmer of bits. I thought map find will be faster then call functions. i was wrong.
+
+        //sort using lambda
+        sort(arr.begin(), arr.end(), [this](int & a, int &b){
+            short a_ones = numOfOnes(a);
+            short b_ones = numOfOnes(a);
+            if (a_ones==b_ones)
+                return a<b;
+            else
+                return a_ones<b_ones;
+
+            });
+        return arr;
+    }
+
+
     //https://leetcode.com/problems/count-all-valid-pickup-and-delivery-options/
     //#1359 HARD
 
@@ -64,10 +96,16 @@ public:
     }
 };
 
+
 int main()
 {
     Solution sol;
     cout << " total variants " << sol.countOrders(6) << endl;
+
+    vector<int> values {1111,7644,1107,6978,8742,1,7403,7694,9193,4401,377,8641,5311,624,3554,6631};
+    cout << "test by bits" ;
+    routine::showVector(  sol.sortByBits(values));
+
     return 0;
 }
 
