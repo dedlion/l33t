@@ -47,6 +47,66 @@ public:
         }
         return bestSum;
     }
+
+   //https://leetcode.com/problems/spiral-matrix/
+   //#54 MEDIUM
+   vector<int> spiralOrder(vector<vector<int>>& matrix) {
+       int y_max = matrix.size();
+       int x_max = matrix.at(0).size();
+       int totalLen = x_max*y_max;
+       vector <int> res(totalLen);
+       int left = 0;
+       int right = x_max-1;
+       int top = 0;
+       int bottom = y_max-1;
+
+       int x =0;
+       int y =0;
+       int index = 0;
+       res[0]=matrix[0][0];
+
+       while (index<totalLen)
+       {
+
+           while (x<right)    //left -> right
+           {
+               x++;
+               index++;
+               res[index] = matrix[y][x];
+           }
+           top++;
+
+           if (index==totalLen-1) return res;
+           while (y<bottom)    //top -> bottom
+           {
+               y++;
+               index++;
+               res[index] = matrix[y][x];
+           }
+           right--;
+
+           if (index==totalLen-1) return res;
+           while (x>left)    // right -> left
+           {
+               x--;
+               index++;
+               res[index] = matrix[y][x];
+           }
+           bottom--;
+
+           if (index==totalLen-1) return res;
+           while (y>top)    //bottom -> top
+           {
+               y--;
+               index++;
+               res[index] = matrix[y][x];
+           }
+           left++;
+
+
+       }
+       return res;
+   }
 };
 
 int main()
@@ -54,6 +114,10 @@ int main()
     Solution sol;
     vector<int> probl53 {-2,1,-3,4,-1,2,1,-5,4};
     cout << "pr53 best positive sum " << sol.maxSubArray(probl53) << endl;
+
+    vector<vector<int>> prob54 {{1,2,3},{4,5,6},{7,8,9}};
+    routine::showVector(sol.spiralOrder(prob54));
+
     return 0;
 }
 
