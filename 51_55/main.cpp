@@ -107,6 +107,24 @@ public:
        }
        return res;
    }
+
+    //https://leetcode.com/problems/jump-game/
+   //#55 MEDIUM
+   bool canJump(vector<int>& nums) {
+       if (nums.size()==1) return true; //already done
+       int len  = nums.size();
+       int fuel = nums.at(0); //how far away i can jump
+
+       int i=0; //lets start from 1st stone
+       while (fuel >0) {    //while i have "strength" to jump i will jump
+           if (i==len-1) return true;   //ok im at the end WIN
+           fuel--;                      //we have used 1 "fuel"
+           fuel = max(fuel,nums[i]);    //may be if will stop here - we can get additional "fuel"
+           i++;                         //go to next index
+       }
+
+       return false;
+   }
 };
 
 int main()
@@ -117,6 +135,9 @@ int main()
 
     vector<vector<int>> prob54 {{1,2,3},{4,5,6},{7,8,9}};
     routine::showVector(sol.spiralOrder(prob54));
+
+    vector<int> prob55 {1,1,1,1,1,4};
+    cout << "can jump " << sol.canJump(prob55) << endl;
 
     return 0;
 }
