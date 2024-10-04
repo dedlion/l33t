@@ -29,6 +29,33 @@ vector<vector<int>> merge(vector<vector<int>>& intervals) {
     }
     return result;
 }
+//PROBLEM 57  EASY
+vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+    vector<vector<int>> result;
+    intervals.push_back(newInterval);
+    int len = intervals.size();
+    //just sort vectors based on their starts
+    std::sort(intervals.begin(), intervals.end(), [](vector<int> & a, vector<int> & b){ return a[0]<b[0];});
+
+    int i =0;
+    while (i <  len) //all intervals
+    {
+        int startInterval = intervals[i][0];
+        int endInterval = intervals[i][1];
+        i++;
+        if (i<len)  //check vector end
+        {
+            while (intervals[i][0]<=endInterval) //while start of the next vector is inside curr vector
+            {
+                endInterval = max(endInterval,intervals[i][1]); //merge it with curr vector
+                i++;
+                if (i==len) break;  //check vector end
+            }
+        }
+        result.push_back({startInterval, endInterval});  //add merged vector to result vector
+    }
+    return result;
+}
 
 //PROBLEM 58  EASY
 const char SPACE = ' ';
@@ -61,6 +88,6 @@ int main()
     cout << "problem 56 " <<endl;
     routine::showVectors(merge(input56)) ;
 
-
+    cout << "problem 58 " << lengthOfLastWord("  d   ")<<endl;
     return 0;
 }
