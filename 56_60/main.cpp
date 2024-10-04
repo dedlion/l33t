@@ -101,7 +101,7 @@ int fillOuterFields(std::vector<std::vector<int>> & matrix, int row, int startVa
         matrix[i][row]=startVal++;
     return startVal;
 }
-//main function
+
 vector<vector<int>> generateMatrix(int n) {
     int row =0;
     int mid = (n%2==0)?n/2:(n/2+1);
@@ -121,6 +121,38 @@ vector<vector<int>> generateMatrix(int n) {
     return result;
 }
 
+//PROBLEM 60. Permutation Sequence  HARD
+//support function
+int factorial(const int n)
+{
+    long f = 1;
+    for (int i=1; i<=n; ++i)
+        f *= i;
+    return f;
+}
+//main func for problem 60
+string getPermutation(int n, int k) {
+    //fill with digits 1..n
+    std::vector<int> numbers(n);
+    std::iota(numbers.begin(), numbers.end(), 1);
+
+    k--;  //this problem counts results from 1 not from 0 -> fix it
+    std::string result = "";
+    int variantsPerDigit = factorial(n-1);    //total variants for other digits. So 3xxxxx has variants_Per_Digit
+    for (int i=0; i<n; i++)
+    {
+        int num = k / variantsPerDigit;             //find which digit will first
+        result = result + to_string(numbers[num]);  //add this digit to result
+        numbers.erase(numbers.begin()+num);         //remove used digit
+        k = k - (num*variantsPerDigit);             //change result number according to "used" by selecting this digit
+
+        //calc new factorial... can be changed to "variantsPerDigit = factorial(n-1-i);
+        if ((n-i-1)>0)
+            variantsPerDigit = variantsPerDigit/(n-i-1);
+    }
+    return result;
+}
+//main function
 int main()
 {
     std::vector<std::vector<int>> input56 = {{4,5},{1,4},{7,8}};
@@ -132,5 +164,8 @@ int main()
 
     cout << "problem 59 " <<endl;
     routine::showVectors(generateMatrix(7)) ;
+
+    cout << "problem 60 " << getPermutation(7,55)<<endl;
+
     return 0;
 }
