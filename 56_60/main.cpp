@@ -30,10 +30,37 @@ vector<vector<int>> merge(vector<vector<int>>& intervals) {
     return result;
 }
 
+//PROBLEM 58  EASY
+const char SPACE = ' ';
+int lengthOfLastWord(string s) {
+    int len = s.size();
+    if (len==0) return 0;
+    //ofc we can use regexp here... but problem is easy
+
+    //1. remove spaces from the end
+    int i = len -1;
+    while (i>=0)
+    {
+        if (s[i]!=SPACE) break;
+        i--;
+    }
+
+    //find word len
+    int wordStart = i;
+    while (i>=0)
+    {
+        if (s[i]==SPACE) break;
+        i--;
+    }
+    return wordStart-i;
+}
+
 int main()
 {
     std::vector<std::vector<int>> input56 = {{4,5},{1,4},{7,8}};
     cout << "problem 56 " <<endl;
     routine::showVectors(merge(input56)) ;
+
+
     return 0;
 }
