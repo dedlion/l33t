@@ -2,6 +2,30 @@
 #include "routine.h"
 
 using namespace std;
+//PROBLEM 566. Reshape the Matrix EASY
+vector<vector<int>> matrixReshape(vector<vector<int>>& mat, int r, int c) {
+    //width(x) - c
+    //height(y) - r
+    int y = mat.size();
+    int x = mat[0].size();
+
+    if (r*c!=x*y) return mat; //conversion not possible
+
+    vector<vector<int>> result;
+    result.resize(r);
+    for (int i=0; i<r; i++)
+        result[i].resize(c);
+
+    for (int i=0; i<y; i++) //y
+        for (int j=0; j<x; j++) //x
+        {
+            int point = i*x + j;
+            int new_x = point % c;
+            int new_y = (point-new_x)/c;
+            result[new_y][new_x] = mat[i][j];
+        }
+    return result;
+}
 
 //PROBLEM 567. Permutation in String  MEDIUM
 bool isPermutation(std::map<char,int> & letters)
@@ -61,6 +85,10 @@ bool checkInclusion(string s1, string s2) {
 
 int main()
 {
-    cout << "Hello World!" << checkInclusion("ab","zabzzzzzzzzzzazzzbzzzzz")<< endl;
+    cout << "Problem 567!" << checkInclusion("ab","zabzzzzzzzzzzazzzbzzzzz")<< endl;
+
+    std::vector<std::vector<int>> matrix ({{1,2,3,4,5,6},{3,4,5,6,7,8}});
+    cout << "Problem 566!" << endl;
+    routine::showVectors(matrixReshape(matrix,3,4));
     return 0;
 }
