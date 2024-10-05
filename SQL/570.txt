@@ -1,0 +1,4 @@
+--567 MEDIUM ... did it just for lulz. My first MySQL request ever
+SELECT name FROM Employee WHERE id IN  
+    (SELECT managerId FROM Employee WHERE managerId IN 
+        (SELECT DISTINCT managerId FROM Employee WHERE managerId IS NOT NULL) GROUP BY managerId HAVING COUNT(*) > 4);
