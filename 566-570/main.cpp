@@ -83,6 +83,11 @@ bool checkInclusion(string s1, string s2) {
     return false;
 }
 
+//PROBLEM 568 Premium
+//PROBLEM 569 Premium
+
+//PROBLEM 570 SQL... Done =)
+
 int main()
 {
     cout << "Problem 567!" << checkInclusion("ab","zabzzzzzzzzzzazzzbzzzzz")<< endl;
