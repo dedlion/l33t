@@ -59,7 +59,7 @@ int main()
 
     std::vector<int> data921{4,2,5,7};
     cout << "922 >> " << endl;
-    routine::showVector(sortArrayByParityII(data921);
+    routine::showVector(sortArrayByParityII(data921));
 
 
     return 0;
