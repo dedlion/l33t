@@ -133,8 +133,50 @@ int threeSumMulti(vector<int>& arr, int target) {
     return result;
 }
 
-//925
+//925. Long Pressed Name EASY
+//wow my solution was pretty slow compare to others =(
+//i wanted use 0 additional memory
+bool isLongPressedName(string name, string typed) {
+    if (typed.size() < name.size()) return false; //fast result
 
+    int indexTyped =0;  //this will be used kind of pointer for typed
+    int indexName=0;    //this will be used kind of pointer for name
+    while (indexTyped < typed.size())
+    {
+        //ok find first letter and count how many times
+        //i think pointers here is better solution (more readable)
+        char letterTyped = typed[indexTyped];   //get letter
+        int numberTyped =1;                     //we already have 1 letter
+        indexTyped++;                           //change index
+        //count copies
+        while (indexTyped < typed.size())
+        {
+            if (typed[indexTyped] == letterTyped)
+            {
+                indexTyped++;
+                numberTyped++;
+            }
+            else
+                break;
+        }
+    //now repeat this for name
+        int numberName=0;
+        while (indexName < name.size())
+        {
+            if (name[indexName]==letterTyped)
+            {
+                indexName++;
+                numberName++;
+            }
+            else
+                break;
+        }
+    //now we check that. we have at least one  the same letter AND
+    //copies count not less the letters count in basic word
+        if ((numberName==0) || (numberName>numberTyped)) return false;
+    }
+    return indexName==name.size(); //should check that in name no additional letters (not parsed by me, bcs typed is my priority in algo"
+}
 
 
 int main()
@@ -146,7 +188,9 @@ int main()
     routine::showVector(sortArrayByParityII(data922));
 
     std::vector<int> data924{1,1,2,2,3,3,4,4,5,5};
-    cout << "924 >> " << threeSumMulti(data924, 8);
+    cout << "924 >> " << threeSumMulti(data924, 8) << endl;
+
+    cout << "925 >> " << isLongPressedName("asd","assddf") << endl;
 
     return 0;
 }
