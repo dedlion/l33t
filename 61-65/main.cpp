@@ -28,6 +28,55 @@ ListNode* rotateRight(ListNode* head, int k) {
 
    }
 
+//62 Unique Paths MEDIUM
+int uniquePaths(int m, int n) {
+    if (m==1 || n==1) return 1;
+    if (m==2 || n==2) return max(n,m);
+    int sum = m+n-2;            //total moves
+    int bigBasis = max(m,n) - 1;       //number of one directional moves
+    int smallBasis = sum - bigBasis;     //number of one directional moves (another)
+    //so we mus calc
+    //sum! / ((smallBasis!) * (sum-smallBasis!))
+
+    //up = sum! / (sum-var)! => 9! / (9-7)! == 8!*9!
+    double up = 1.0;
+    for (int i=bigBasis+1; i<=sum; i++)
+        up = up *i;
+
+    //usual factorial
+    double down = 1.0;
+    for (int i=1; i<=smallBasis; i++)
+        down = down *i;
+
+    return round(up/down);
+}
+
+//64. Minimum Path Sum MEDIUM
+int minPathSum(vector<vector<int>>& grid) {
+    int y_len = grid.size();
+    int x_len = grid.at(0).size();
+    int totalSteps = x_len + y_len - 1;
+    if (totalSteps == 1) return grid[0][0]; //dont want ot calc if size == [1;1]
+
+    for (int y = 1; y < y_len; y++)         //summ first row (so we can skip "if" in math for border values)
+        grid[y][0]+=grid[y-1][0];
+
+    for (int x = 1; x < x_len; x++)         //summ first col (so we can skip "if" in math for border values)
+        grid[0][x]+=grid[0][x-1];
+
+    if (x_len==1 || y_len==1) return grid[y_len-1][x_len-1];    //if we have only one row or one column skip math
+
+    for (int i=2; i<totalSteps; i++)    //i==2 bcs first we already calced
+    {
+        for (int y = 1; y < min(i,y_len); y++)  //calc diag values Y
+        {
+            int x = i - y;                                  //calc diag values X
+            if (x>=x_len) continue;                         //border check
+            grid[y][x] += min(grid[y][x-1],grid[y-1][x]);   //take prev value only from top or left
+        }
+    }
+    return grid[y_len-1][x_len-1];
+}
 
 int main()
 {
@@ -35,5 +84,9 @@ int main()
     cout << "61 >> " << endl;
     routine::showList(rotateRight(routine::generateList(data61),5));
 
+    cout << "62 >> " << uniquePaths(17,2) << endl;
+
+    std::vector<std::vector<int>> data64{{1,3,1},{1,5,1},{4,2,1}};
+    cout << "64 >> "  << minPathSum(data64) << endl;
     return 0;
 }
