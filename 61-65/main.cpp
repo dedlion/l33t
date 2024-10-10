@@ -51,6 +51,72 @@ int uniquePaths(int m, int n) {
     return round(up/down);
 }
 
+//63. Unique Paths II MEDIUM
+int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+
+    int lenY = obstacleGrid.size();
+    int lenX = obstacleGrid[0].size();
+
+    //nummber of variants is negative bcs obstacle is positive
+    //easier to check results... can be changed to positive
+
+    obstacleGrid[0][0] = -1; //fill start row
+    //fill first row
+    for (int i=1; i<lenX; i++)
+    {
+        if (obstacleGrid[0][i]==1)  //obstacle
+            obstacleGrid[0][i]=0;   //zero ways to come here
+        else
+            obstacleGrid[0][i]=obstacleGrid[0][i-1];    //copy prev cell
+    }
+    //fill first column
+    for (int i=1; i<lenY; i++)
+    {
+        if (obstacleGrid[i][0]==1) //obstacle
+            obstacleGrid[i][0]=0;   //zero ways to come here
+        else
+            obstacleGrid[i][0]=obstacleGrid[i-1][0];    //copy prev cell
+    }
+
+    int maxLen = min(lenX,lenY);
+    for (int i=1; i<maxLen; i++)
+    {
+        //fill row then column
+        if (i<lenX)
+        {
+            //i - x, j - y
+            for (int j=i; j<lenY; j++)
+            {
+                //idea like before. if obstacle - 0, not obstacle pathes = cell from left + cell from up
+                if (obstacleGrid[j][i]==1)
+                {
+                    obstacleGrid[j][i]=0;
+                } else
+                {
+                    obstacleGrid[j][i] = obstacleGrid[j-1][i] + obstacleGrid[j][i-1];
+                }
+            }
+        }
+        if (i<lenY)
+        {
+            //i - y, j - x
+            //idea like before. if obstacle - 0, not obstacle pathes = cell from left + cell from up
+            for (int j=i+1; j<lenX; j++)
+            {
+                if (obstacleGrid[i][j]==1)
+                {
+                    obstacleGrid[i][j]=0;
+                } else
+                {
+                    obstacleGrid[i][j] = obstacleGrid[i-1][j] + obstacleGrid[i][j-1];
+                }
+            }
+        }
+    }
+    return -obstacleGrid[lenY-1][lenX-1];
+}
+
+
 //64. Minimum Path Sum MEDIUM
 int minPathSum(vector<vector<int>>& grid) {
     int y_len = grid.size();
@@ -85,6 +151,10 @@ int main()
     routine::showList(rotateRight(routine::generateList(data61),5));
 
     cout << "62 >> " << uniquePaths(17,2) << endl;
+
+    //std::vector<std::vector<int>> data63 {{0,0,0},{0,0,0},{0,1,0},{1,0,0},{0,0,0}};
+    std::vector<std::vector<int>> data63 {{0,0,0,0,0},{0,0,0,0,1},{0,0,0,1,0},{0,0,1,0,0}};
+    cout << "_63 >> " << uniquePathsWithObstacles(data63) << endl;
 
     std::vector<std::vector<int>> data64{{1,3,1},{1,5,1},{4,2,1}};
     cout << "64 >> "  << minPathSum(data64) << endl;
